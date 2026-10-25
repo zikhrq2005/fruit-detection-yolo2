@@ -13,7 +13,13 @@ Image processing and YOLO training notebooks accompany a Streamlit app that disp
 
 **The datasets and class sets differ. Their metrics do not establish an overall ranking of model architectures.**
 
-This repository contains group work. Individual contributions have not yet been itemized.
+## My work
+
+I developed the original project implementation: image preprocessing and augmentation, YOLO model training, and the Streamlit application. The project was submitted as group coursework.
+
+The current repository also includes subsequent AI-assisted improvements to documentation, model discovery, image validation, reusable inference code, and automated checks.
+
+The reported validation scores are coursework results; the reproducibility limitations below still apply.
 
 ## What's included
 
