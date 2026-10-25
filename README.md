@@ -7,7 +7,7 @@
 
 ## Project Overview
 
-This project builds a complete end-to-end visual computing pipeline for fruit counting and instance detection. The group is split into two subteams, each working on a different dataset and training different YOLO versions for cross-model comparison.
+This group coursework project contains image processing and YOLO training notebooks, plus a Streamlit interface for fruit counting and detection. The group is split into two subteams, each working on a different dataset and training different YOLO versions for cross-model comparison.
 
 | | Subteam A | Subteam B |
 |---|---|---|
@@ -53,10 +53,11 @@ Applies and compares all required preprocessing steps on a sample image from the
 ```
 step2_color_space.png
 step3_resizing.png
-step4_noise_reduction.png
-step5_thresholding.png
-step6_histogram.png
-step7_sharpening.png
+step4_translation.png
+step5_noise_reduction.png
+step6_thresholding.png
+step7_histogram.png
+step8_sharpening.png
 ```
 
 ---
@@ -158,7 +159,7 @@ conda activate FruitDetection
 
 ### Step 2 — Install required libraries
 ```
-pip install ultralytics roboflow torch torchvision streamlit Pillow opencv-python
+python -m pip install ultralytics roboflow torch torchvision streamlit Pillow opencv-python matplotlib numpy jupyter
 ```
 
 ### Step 3 — Run the notebooks in order
@@ -191,7 +192,7 @@ The training notebook requires a Roboflow API key to download the dataset. To ge
 2. Create a free account
 3. Go to **Settings → API Keys**
 4. Copy your **Private API Key**
-5. Replace `YOUR_API_KEY` in `Training.ipynb` Step 2
+5. Configure the empty API-key argument in `Training.ipynb` Step 2 locally. Do not commit a populated private key.
 
 ---
 
@@ -204,7 +205,7 @@ The training notebook requires a Roboflow API key to download the dataset. To ge
 | Precision | 0.988 | **0.989** | 0.707 | 0.739 |
 | Recall | **0.996** | **0.996** | 0.706 | 0.660 |
 
-> YOLOv5 achieved the best overall performance with the highest mAP@0.5 (0.989) and mAP@0.5:0.95 (0.900). Subteam A models significantly outperformed Subteam B due to a cleaner, more consistently annotated dataset with simpler backgrounds.
+> These are reported validation results, also recorded as constants in the app. The committed training notebook has no saved execution outputs, so the table is not independently reproducible from stored outputs alone. Subteams used different datasets and class sets: these scores do not establish an overall ranking of YOLO architectures or explain the cause of performance differences.
 
 ---
 
@@ -220,3 +221,26 @@ The training notebook requires a Roboflow API key to download the dataset. To ge
 | Pillow | latest | Image loading in Streamlit |
 | matplotlib | latest | Figure generation in notebooks |
 | numpy | latest | Array operations |
+
+## Image processing example
+
+The following committed figure illustrates preprocessing, rather than trained-model detection:
+
+![Comparison of image resizing methods](step3_resizing.png)
+
+## Reproducibility and current limitations
+
+- Trained weights are not included. Detection requires the appropriate trained weights; the repository does not currently provide a ready-to-run pretrained demo.
+- The included training notebook covers Subteam A only. Subteam B weights and training provenance must be obtained separately for those app options.
+- Dependency versions in the table above are unpinned. The setup has not been validated in a clean environment; `latest` is not a reproducibility guarantee.
+- The training notebook evaluates through `model.val(data=yamlPath)` without explicitly selecting the test split. Do not describe the reported validation scores as held-out test results.
+- The app's metrics page displays stored values; it does not evaluate an uploaded image against ground-truth labels.
+- A fair architecture comparison needs a shared dataset, class definitions, evaluation split, and documented training settings.
+- This is group coursework. Individual contributions have not yet been itemized here.
+
+## Next development steps
+
+- Publish evaluation logs, split sizes, class-level metrics, and failure examples.
+- Verify setup and record tested dependency versions.
+- Provide permitted model downloads with provenance and a sample input.
+- Add image validation and tests for inference helpers.
