@@ -1,0 +1,7 @@
+-r requirements.txt
+roboflow>=1.1,<2
+matplotlib>=3.8,<4
+numpy>=1.26,<3
+opencv-python>=4.8,<5
+jupyter>=1,<2
+# Install a suitable PyTorch build for your CPU/CUDA environment before training.

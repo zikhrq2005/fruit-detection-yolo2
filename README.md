@@ -1,246 +1,118 @@
-# Fruit Counting and Instance Detection
-### Visual Computing and Image Processing — 25CSAI02I
-**The British University in Egypt | Faculty of Informatics and Computer Science**
-**Module Leader: Dr. Ahmed Fahmi | Semester Two | 2025–2026**
+# Fruit Detection and Counting
 
----
+Group coursework for **Visual Computing and Image Processing — 25CSAI02I**, The British University in Egypt.
 
-## Project Overview
+Image processing and YOLO training notebooks accompany a Streamlit app that displays bounding boxes and counts detections by class.
 
-This group coursework project contains image processing and YOLO training notebooks, plus a Streamlit interface for fruit counting and detection. The group is split into two subteams, each working on a different dataset and training different YOLO versions for cross-model comparison.
+## Project overview
 
-| | Subteam A | Subteam B |
-|---|---|---|
-| Dataset | fruit-detection-2aajq/fruit-nxoac (825 images) | fruitsdetection/fruits-by-yolo (1,176 images) |
-| Classes | Apple, Tomato, Cauliflower, Adrak, Bitter Gourd, Capsicum | Apple, Banana, Grapes, Mango, Orange, Strawberry |
-| Models | YOLOv5 and YOLOv8 | YOLOv9 and YOLOv10 |
+| Subteam | Dataset | Classes | Models |
+|---|---|---|---|
+| A | [fruit-nxoac](https://universe.roboflow.com/fruit-detection-2aajq/fruit-nxoac), version 4; reported 825 images | Apple, Tomato, Cauliflower, Adrak, Bitter Gourd, Capsicum | YOLOv5, YOLOv8 |
+| B | fruitsdetection/fruits-by-yolo; reported 1,176 images | Apple, Banana, Grapes, Mango, Orange, Strawberry | YOLOv9, YOLOv10 |
 
----
+**The datasets and class sets differ. Their metrics do not establish an overall ranking of model architectures.**
 
-## Project Files
+This repository contains group work. Individual contributions have not yet been itemized.
 
-```
-project/
-├── Preprocessing.ipynb       ← Image preprocessing pipeline (Subteam A)
-├── Augmentation.ipynb        ← Data augmentation study (Subteam A)
-├── Training.ipynb            ← YOLO model training — YOLOv5 and YOLOv8 (Subteam A)
-├── app.py                    ← Streamlit web application (full group)
-├── yolov5.pt                 ← Trained YOLOv5 weights (add after training)
-├── yolov8.pt                 ← Trained YOLOv8 weights (add after training)
-├── yolov9.pt                 ← Trained YOLOv9 weights (add after Subteam B trains)
-└── yolov10.pt                ← Trained YOLOv10 weights (add after Subteam B trains)
-```
+## What's included
 
-> **Note:** The `.pt` weight files are not included in this repository. They are generated after running `Training.ipynb` and must be placed in the same folder as `app.py` before running the Streamlit app.
-
----
-
-## File Descriptions
-
-### 1. Preprocessing.ipynb
-Applies and compares all required preprocessing steps on a sample image from the Subteam A dataset.
-
-**Steps covered:**
-- Step 1 — Load sample image from Roboflow dataset
-- Step 2 — Color space conversion: BGR → RGB and Grayscale
-- Step 3 — Resize to 640×640 with aspect ratio preserved (4 interpolation methods compared: INTER_NEAREST, INTER_LINEAR, INTER_CUBIC, INTER_AREA)
-- Step 4 — Noise reduction (Mean, Gaussian, Median, Bilateral — side-by-side comparison)
-- Step 5 — Thresholding and binarization (Simple, Adaptive, Otsu's method)
-- Step 6 — Histogram visualization (grayscale + RGB channels)
-- Step 7 — Sharpening filter using a 3×3 convolution kernel
-
-**Output figures saved:**
-```
-step2_color_space.png
-step3_resizing.png
-step4_translation.png
-step5_noise_reduction.png
-step6_thresholding.png
-step7_histogram.png
-step8_sharpening.png
-```
-
----
-
-### 2. Augmentation.ipynb
-Implements and compares all 6 required augmentation techniques with before-and-after figures for the project report.
-
-**Augmentations covered:**
-
-| # | Technique | Key Function |
-|---|---|---|
-| 1 | Translation | `cv2.warpAffine()` with translation matrix |
-| 2 | Rotation | `cv2.getRotationMatrix2D()` + `cv2.warpAffine()` |
-| 3 | Flipping | `cv2.flip()` — horizontal (1), vertical (0), both (-1) |
-| 4 | Cropping | NumPy array slicing `[y1:y2, x1:x2]` |
-| 5 | Brightness and Contrast | `cv2.convertScaleAbs(alpha, beta)` |
-| 6 | Gamma Correction | `cv2.LUT()` with lookup table |
-
-**Output figures saved:**
-```
-aug1_translation.png
-aug2_rotation.png
-aug3_flipping.png
-aug4_cropping.png
-aug5_brightness_contrast.png
-aug6_gamma.png
-aug_all_summary.png
-```
-
----
-
-### 3. Training.ipynb
-Trains YOLOv5 and YOLOv8 on the Subteam A dataset using transfer learning from COCO pretrained weights.
-
-**Pipeline 1 — YOLOv5:**
-- Model: `yolov5n.pt`
-- Epochs: 50
-- Image size: 640×640
-- Batch size: 16
-- Early stopping: patience = 10
-
-**Pipeline 2 — YOLOv8:**
-- Model: `yolov8n.pt`
-- Epochs: 50
-- Image size: 640×640
-- Batch size: 8
-- Early stopping: patience = 10
-
-**Steps covered:**
-- Download dataset from Roboflow (requires API key)
-- Create and verify `data.yaml` configuration
-- Train YOLOv5 and YOLOv8
-- Run predictions on 3 test images
-- Side-by-side model comparison figure
-- Confidence threshold effects (0.25, 0.50, 0.75)
-- Validation metrics table (mAP@0.5, mAP@0.5:0.95, Precision, Recall)
-- Display training loss and mAP curves
-
-**Output files saved:**
-```
-pred_v5_0.jpg / pred_v5_1.jpg / pred_v5_2.jpg
-pred_v8_0.jpg / pred_v8_1.jpg / pred_v8_2.jpg
-comparison_v5_vs_v8.png
-confidence_threshold_effects.png
-runs/detect/fruit_yolov5/weights/best.pt   ← best YOLOv5 weights
-runs/detect/fruit_yolov8/weights/best.pt   ← best YOLOv8 weights
-runs/detect/fruit_yolov5/results.png       ← training curves
-runs/detect/fruit_yolov8/results.png       ← training curves
-```
-
----
-
-### 4. app.py
-Streamlit web application that runs inference using all 4 trained models and visualizes results interactively.
-
-**Pages:**
-
-| Page | Description |
+| File | Purpose |
 |---|---|
-| Home | Project overview, subteam info, dataset details |
-| Single Model Detection | Upload an image, choose a model, see bounding boxes and confidence scores |
-| Multi-Model Comparison | Upload one image and compare all 4 models side by side in a 2×2 grid |
-| Model Metrics | Metrics table, F1 score, and bar charts for mAP, Precision, and Recall |
+| `Preprocessing.ipynb` | Color spaces, resizing, filtering, thresholding, histograms, sharpening |
+| `Augmentation.ipynb` | Translation, rotation, flipping, cropping, brightness/contrast, gamma |
+| `Training.ipynb` | Subteam A training, prediction examples, and validation |
+| `app.py` | Streamlit UI for single-model detection and side-by-side predictions |
+| `app_helpers.py` | Model file discovery, image validation, and class counting |
+| `reported_metrics.json` | Stored coursework validation scores, separated by subteam |
+| `tests/` | Model discovery, counting, and image-input checks |
 
-**Sidebar controls:**
-- Page navigation dropdown
-- Model selector (yolov5.pt, yolov8.pt, yolov9.pt, yolov10.pt)
-- Confidence threshold slider (0.01 – 1.00, default 0.25)
+## Run the app
 
----
+Use Python 3.11 or 3.12 as the target environment. Create and activate a virtual environment, then run:
 
-## Setup and Installation
-
-### Step 1 — Create Anaconda environment
-```
-conda create -n FruitDetection python=3.12.3
-conda activate FruitDetection
-```
-
-### Step 2 — Install required libraries
-```
-python -m pip install ultralytics roboflow torch torchvision streamlit Pillow opencv-python matplotlib numpy jupyter
-```
-
-### Step 3 — Run the notebooks in order
-```
-1. Preprocessing.ipynb
-2. Augmentation.ipynb
-3. Training.ipynb          ← requires Roboflow API key
-```
-
-### Step 4 — Rename trained weights for the Streamlit app
-After Training.ipynb completes, copy and rename the best weights:
-```
-runs/detect/fruit_yolov5/weights/best.pt  →  yolov5.pt
-runs/detect/fruit_yolov8/weights/best.pt  →  yolov8.pt
-```
-Place both `.pt` files in the same folder as `app.py`.
-
-### Step 5 — Run the Streamlit app
-```
+```sh
+python -m pip install -r requirements.txt
 streamlit run app.py
 ```
-The browser opens automatically at `http://localhost:8501`
 
----
+The overview and stored metrics pages work without weights. Detection requires locally supplied trained weights beside `app.py`:
 
-## Roboflow API Key
+- `yolov5.pt` and `yolov8.pt`: generated from Subteam A training.
+- `yolov9.pt` and `yolov10.pt`: obtain the corresponding trained artifacts from Subteam B.
 
-The training notebook requires a Roboflow API key to download the dataset. To get yours:
-1. Go to https://app.roboflow.com
-2. Create a free account
-3. Go to **Settings → API Keys**
-4. Copy your **Private API Key**
-5. Configure the empty API-key argument in `Training.ipynb` Step 2 locally. Do not commit a populated private key.
+Only model files that exist are offered for inference. The app does not substitute general-purpose weights for a missing fruit detector. Use trusted model files from a known training run.
 
----
+Upload a JPG or PNG, select available models, adjust confidence, and click **Run detection**. Uploads are limited to 10 MB and 20 million pixels; decoded images are normalized to RGB and EXIF orientation is applied.
 
-## Model Performance Results
+## Train Subteam A models
 
-| Metric | YOLOv5 | YOLOv8 | YOLOv9 | YOLOv10 |
-|---|---|---|---|---|
-| mAP@0.5 | **0.989** | 0.988 | 0.740 | 0.709 |
-| mAP@0.5:0.95 | **0.900** | 0.885 | 0.614 | 0.567 |
-| Precision | 0.988 | **0.989** | 0.707 | 0.739 |
-| Recall | **0.996** | **0.996** | 0.706 | 0.660 |
+Install the training dependencies in the same environment:
 
-> These are reported validation results, also recorded as constants in the app. The committed training notebook has no saved execution outputs, so the table is not independently reproducible from stored outputs alone. Subteams used different datasets and class sets: these scores do not establish an overall ranking of YOLO architectures or explain the cause of performance differences.
+```sh
+python -m pip install -r requirements-training.txt
+```
 
----
+Configure a suitable PyTorch build for your CPU/CUDA environment. Set your own Roboflow key locally before starting Jupyter.
 
-## Dependencies
+PowerShell:
 
-| Library | Version | Purpose |
-|---|---|---|
-| ultralytics | latest | YOLO model training and inference |
-| roboflow | latest | Dataset download |
-| torch | latest | Deep learning backend |
-| opencv-python | latest | Image processing |
-| streamlit | latest | Web application |
-| Pillow | latest | Image loading in Streamlit |
-| matplotlib | latest | Figure generation in notebooks |
-| numpy | latest | Array operations |
+```powershell
+$env:ROBOFLOW_API_KEY = "your-local-key"
+jupyter notebook
+```
 
-## Image processing example
+macOS/Linux:
 
-The following committed figure illustrates preprocessing, rather than trained-model detection:
+```sh
+export ROBOFLOW_API_KEY="your-local-key"
+jupyter notebook
+```
+
+Never commit a populated key. Run `Training.ipynb` in order. It downloads dataset version 4, trains with 640-pixel images for up to 50 epochs and early-stopping patience 10, and uses batch sizes 16 (v5) and 8 (v8).
+
+Copy the actual best weights from each training run to the filenames expected by the app. The notebook expects:
+
+```text
+runs/detect/fruit_yolov5/weights/best.pt -> yolov5.pt
+runs/detect/fruit_yolov8/weights/best.pt -> yolov8.pt
+```
+
+Repeated runs can receive suffixed output directories; check the path printed by training.
+
+## Reported validation results
+
+| Subteam | Model | mAP@0.5 | mAP@0.5:0.95 | Precision | Recall |
+|---|---|---|---|---|---|
+| A | YOLOv5 | 0.989 | 0.900 | 0.988 | 0.996 |
+| A | YOLOv8 | 0.988 | 0.885 | 0.989 | 0.996 |
+| B | YOLOv9 | 0.740 | 0.614 | 0.707 | 0.706 |
+| B | YOLOv10 | 0.709 | 0.567 | 0.739 | 0.660 |
+
+These stored values come from the coursework documentation. The committed training notebook has no saved execution outputs; run logs and model artifacts are still needed to verify the figures. The metrics page reads stored results rather than evaluating uploaded images.
+
+The notebook calls `model.val(data=yamlPath)` without explicitly selecting the test split. These figures should not be described as held-out test scores. Viewing predictions on three test images is a qualitative check, not a test-set evaluation.
+
+## Preprocessing example
 
 ![Comparison of image resizing methods](step3_resizing.png)
 
-## Reproducibility and current limitations
+This figure demonstrates preprocessing, not trained detection performance.
 
-- Trained weights are not included. Detection requires the appropriate trained weights; the repository does not currently provide a ready-to-run pretrained demo.
-- The included training notebook covers Subteam A only. Subteam B weights and training provenance must be obtained separately for those app options.
-- Dependency versions in the table above are unpinned. The setup has not been validated in a clean environment; `latest` is not a reproducibility guarantee.
-- The training notebook evaluates through `model.val(data=yamlPath)` without explicitly selecting the test split. Do not describe the reported validation scores as held-out test results.
-- The app's metrics page displays stored values; it does not evaluate an uploaded image against ground-truth labels.
-- A fair architecture comparison needs a shared dataset, class definitions, evaluation split, and documented training settings.
-- This is group coursework. Individual contributions have not yet been itemized here.
+## Checks
 
-## Next development steps
+```sh
+python -m unittest discover -s tests -v
+python -m compileall -q app.py app_helpers.py
+```
 
-- Publish evaluation logs, split sizes, class-level metrics, and failure examples.
-- Verify setup and record tested dependency versions.
-- Provide permitted model downloads with provenance and a sample input.
-- Add image validation and tests for inference helpers.
+The tests need Pillow but no model weights, GPU, or dataset download. GitHub Actions runs these checks on Python 3.11 and 3.12. It does not train models or certify inference accuracy.
+
+## Limitations and next steps
+
+- Dependency ranges are provided, but a clean full installation and model inference have not been verified. They are not a tested lockfile.
+- Trained artifacts and a hosted demo are not included; only Subteam A training is provided.
+- Publish training logs, split sizes, per-class results, counting errors, and difficult examples.
+- Check duplicate/near-duplicate images across splits and document annotation quality.
+- Compare architectures on a common dataset and evaluation protocol.
+- Record latency and hardware alongside detection metrics.

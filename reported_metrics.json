@@ -1,0 +1,34 @@
+[
+  {
+    "Subteam": "A",
+    "Model": "YOLOv5",
+    "mAP@0.5": 0.989,
+    "mAP@0.5:0.95": 0.9,
+    "Precision": 0.988,
+    "Recall": 0.996
+  },
+  {
+    "Subteam": "A",
+    "Model": "YOLOv8",
+    "mAP@0.5": 0.988,
+    "mAP@0.5:0.95": 0.885,
+    "Precision": 0.989,
+    "Recall": 0.996
+  },
+  {
+    "Subteam": "B",
+    "Model": "YOLOv9",
+    "mAP@0.5": 0.74,
+    "mAP@0.5:0.95": 0.614,
+    "Precision": 0.707,
+    "Recall": 0.706
+  },
+  {
+    "Subteam": "B",
+    "Model": "YOLOv10",
+    "mAP@0.5": 0.709,
+    "mAP@0.5:0.95": 0.567,
+    "Precision": 0.739,
+    "Recall": 0.66
+  }
+]

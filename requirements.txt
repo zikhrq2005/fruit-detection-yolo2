@@ -1,0 +1,5 @@
+# Supported environment target: Python 3.11 or 3.12.
+# Compatibility ranges, not a tested lockfile.
+streamlit>=1.40,<2
+ultralytics>=8.3,<9
+Pillow>=10.4,<13
